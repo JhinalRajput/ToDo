@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/home.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Document</title>
+ 
+</head>
+<body>
+    <section class="sect1">
+        
+       <a style="display: inline; color:white;" href="">Signup</a>
+       <a style="display: inline; color:white; margin-left:3rem;" href="" rel="link-signin">Signin</a> 
+       
+    </section>
+
+    <div class="container-form">
+        <form class="form" id="signin-form" hidden>
+            {%csrf_token%}
+            <section class="set-label"><h3 class="sup">Signin</h3></section>
+            <input class="field" id="uname" type="text" placeholder="Username" name="uname"><br>
+            <input class="field" id="pwd" type="password" placeholder="password" name="pass"><br>
+            <section class="sect-sub"><input class="submit" id="btn-signin" type="submit" value="Submit"></section>
+
+        </form>
+  
+        <form class="form" id="signup-form">
+            <section class="set-label"><h3 class="sup">Signup</h3></section>
+            <input class="field" id="username" rel="user_name" type="text" placeholder="Username" name="uname" data-toggle="popover" title="Username taken"><br>
+            <input class="field" id="email_id" rel="email_id" type="email" placeholder="Email" name="email" data-toggle="popover" title="Invalid Email-id"><br>
+            <input class="field" id="password" rel="pass1" type="password" placeholder="password" name="pass"><br>
+            <input class="field" id="conpassword" rel="pass2" type="password" placeholder="confirm password" name="conpass" data-toggle="popover" title="Password Mismatched"><br>
+            <section class="sect-sub"><input class="submit" id="btn-signup" type="submit" value="Submit"></section>
+        </form>
+    </div>
+        
+    
+    
+        <script type="text/javascript">
+            $("#btn-signup").click(function(){
+                event.preventDefault();
+                const uname = document.querySelector("#username").value;
+                const email_id = document.querySelector("#email_id").value;
+                const pass1 = document.querySelector("#password").value;
+                const pass2 = document.querySelector("#conpassword").value;
+
+                if(email_id.indexOf("@")==-1 || email_id.lastIndexOf(".")==-1){
+                    $("[rel=email_id]").popover({
+                        trigger: 'hover',
+                        html: true,
+                    }).popover('toggle');
+                }
+                else if(pass1 !== pass2){
+                    $("[rel=pass2]").popover({
+                        trigger: 'hover',
+                        html: true,
+                    }).popover('toggle');
+                }
+                else{
+                    var mydata;
+                    var csrf = $("input[name=csrfmiddlewaretoken").val();
+                    mydata = {
+                        username: uname, email_id: email_id, password: pass1,csrfmiddlewaretoken:csrf
+                    }
+                    $.ajax({
+                        method:'POST',
+                        url: '',
+                        data:mydata,
+                        success:function(data){
+                            if(data.status =='exist'){
+                                $("[rel=user_name]").popover({
+                                    trigger: 'hover',
+                                    html: true,
+                                }).popover('toggle');
+                            }
+                            else if (data.status=='success'){
+                                var myel = document.getElementById('signin-form');
+                                myel.removeAttribute('hidden');
+                                var myel2 = document.getElementById('signup-form');
+                                myel2.setAttribute('hidden','');
+                            }
+                        }
+                    })
+                }
+            
+            });
+
+            $("#btn-signin").click(function(){
+                event.preventDefault();
+                const uname = document.querySelector("#uname").value;
+                const pwd = document.querySelector("#pwd").value;
+                var mydata;
+                    var csrf = $("input[name=csrfmiddlewaretoken").val();
+                    mydata = {
+                        username: uname, password: pwd,csrfmiddlewaretoken:csrf
+                    }
+                $.ajax({
+                    method:'POST',
+                    url: 'signin',
+                    data: mydata,
+                    success:function(data){
+                        console.log('signed in')
+                        sessionStorage.setItem('userid',data.id)
+                        window.location.href='myapp/todo'
+                    }
+                }); 
+            });
+
+            $('a[rel=link-signin]').click(function(){
+                event.preventDefault();
+                var myel = document.getElementById('signin-form');
+                myel.removeAttribute('hidden');
+                var myel2 = document.getElementById('signup-form');
+                myel2.setAttribute('hidden','');
+            })
+
+        </script>
+
+</body>
+</html>

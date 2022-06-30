@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Todo App</title>
+    
+</head>
+<body>
+    <div class="box">
+        <section class="section1">
+            <p class="head1" style="display: inline; font-family:'Sofia', sans-serif;">Add Your Todos here</p>
+            <button class="btn btn-danger" id="btn-logout" style="display: inline; float:right; margin-right:100px; margin-top:10px;">Logout</button>
+        </section>
+    </div>
+
+    <strong><h2 class="task" >Add Below:</h2>
+
+    <hr style="height:7px; width: 100%; color:black; margin-top:0px;margin-bottom:7px;">
+
+    <div id="todos">
+
+    </div>
+   
+            
+    <form class="form" id="task-form" >
+        <input class="field" id="text-task" type="text" name="t1">
+        <input class="add" type="submit" name="submit" id="btn-sub" value="Add">
+    </form>
+
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+            var id = sessionStorage.getItem('userid');
+
+            if(id==null){
+                window.location.href=`{% url 'error' %}`
+            }
+
+            $.ajax({
+                method: 'GET',
+                url: 'get_all',
+                data:{'id':id},
+                success:function(data){
+                    var todos = data.all_todos;
+                    var sect = document.getElementById('todos');
+                    sect.innerHTML=''
+                    for(let i=0; i<todos.length; i++){
+                        sect.innerHTML += `<section id="`+todos[i].id+`"><strong><p style="display:inline;" class="task" id="add-task">`+todos[i].task+`</p></strong>
+                        <button class="a1" id="done" style="display:inline; margin-bottom:5px; " rel="`+todos[i].id+`" >Done</button>
+                        <hr style="height:7px; width: 100%; color:black; margin-top:0px; margin-bottom:5px;"></section>`
+                    }
+                }
+            })
+        })
+
+        $("#btn-sub").click(function(){
+            event.preventDefault();
+            //console.log("submitted")
+            const task = document.querySelector("#text-task").value;
+            //console.log(task);
+            var id = sessionStorage.getItem('userid');
+            const myform = document.getElementById('text-task');
+            myform.value='';
+            //console.log(sessionStorage.getItem('userid'))
+            var mydata = {task: task, uid: id}
+            $.ajax({
+                method:'GET',
+                url:'add_todos',
+                data: mydata,
+                success:function(data){
+                    var latest = data.latest;
+                    var sect = document.getElementById('todos');
+                    sect.innerHTML+= `<section id="`+latest.id+`"><strong><p style="display:inline;" class="task" id="add-task">`+latest.task+`</p></strong>
+                    <button class="a1" id="done" style="display:inline; margin-bottom:5px;" rel="`+latest.id+`" >Done</button>
+                    <hr style="height:7px; width: 100%; color:black; margin-top:0px; margin-bottom:5px;"></section>`
+                }
+            })
+        })
+
+        $(document).on('click','#done',function(){
+            var t_id = $(this).attr('rel');
+            $.ajax({
+                method:'GET',
+                url:'delete',
+                data:{'t_id':t_id},
+                success:function(){
+                    var sect = document.getElementById(t_id);
+                    sect.innerHTML=''
+                }
+            })
+        })
+
+        $("#btn-logout").click(function(){
+            sessionStorage.clear();
+            window.location.href=`{% url 'logout' %}`
+        })
+    </script>
+
+</body>
+</html>

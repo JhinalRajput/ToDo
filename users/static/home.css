@@ -1,0 +1,85 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.form{
+    width: 40%;
+    display: block;
+    align-self: center;
+    justify-content: center;
+    margin-top: 20px;
+    background-color: rgb(151, 151, 202);
+    padding-top:0.5rem;
+    padding-bottom: 60px;
+    border-radius: 5px;
+}
+
+.field{
+    font-size: 1.5rem;
+    width: 75%;
+    margin-left: 4.5rem;
+    margin-top: 0.5rem;
+    border: none;
+    background-color: rgb(203, 203, 216);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    border-radius: 5px;
+}
+
+.submit{
+    margin-top: 20px;
+    background-color: rgb(85, 37, 92);
+    color: white;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+.sup{
+    align-items: center;
+    justify-content: center;
+    color: rgb(21, 6, 73);
+    font-size: 2rem;
+}
+
+body{
+    background-image: linear-gradient(to right bottom, rgb(162, 162, 204),white);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: scroll;
+    height: 100vh;
+}
+
+.sect-sub{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+a:link{
+   text-decoration: none;
+   font-size: 2rem;
+}
+a:hover{
+    text-decoration: underline;
+}
+.sect1{
+    display: flex;
+    background-color: rgb(120, 100, 121);
+    justify-content: center;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+}
+.container-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.set-label{
+    display: flex;
+    justify-content: center;
+}
